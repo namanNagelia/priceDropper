@@ -16,7 +16,6 @@ function App() {
 
   return (
     <div className="flex h-screen w-full">
-      {/* Left side - Login Form */}
       <div className="w-full lg:w-1/2 p-8 flex flex-col justify-center">
         <div className="max-w-md mx-auto w-full">
           <div className="mb-8">

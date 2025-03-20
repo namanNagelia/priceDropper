@@ -9,15 +9,13 @@ import cookieParser from "cookie-parser";
 const router = Router();
 router.use(cookieParser());
 
-const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not defined in the environment variables");
+}
 
 router.get("/test", (req, res) => {
   res.json({ message: "Hello World from auth route" });
-});
-
-router.get("/users", async (req, res) => {
-  const users = await db.select().from(usersTable);
-  res.json(users);
 });
 
 router.post("/register", async (req: any, res: any) => {
@@ -68,13 +66,13 @@ router.post("/login", async (req: any, res: any) => {
     const token = jwt.sign(
       { id: user[0].id, email: user[0].email },
       JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "7d" }
     );
 
     res.cookie("token", token, {
       httpOnly: true, // Prevents client-side JS from accessing cookie
       secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
-      maxAge: 24 * 60 * 60 * 1000, // 1 day expiration
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days expiration
       sameSite: "strict",
     });
 

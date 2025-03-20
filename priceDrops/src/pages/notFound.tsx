@@ -7,9 +7,7 @@ function NotFound() {
 
   return (
     <div className="flex min-h-screen w-full">
-      {/* Left side - Content */}
-
-      <div className="max-w-md w-full mx-auto lg:mx-0 lg:ml-auto lg:mr-12 xl:mr-24">
+      <div className="flex flex-col items-center justify-center w-full">
         <div className="mb-8 text-center">
           <div className="w-12 h-12 bg-blue-700 rounded-lg grid place-items-center mb-6 mx-auto">
             <div className="grid grid-cols-2 grid-rows-2 gap-1">
@@ -26,9 +24,7 @@ function NotFound() {
           </p>
         </div>
 
-        <div className="h-px bg-gray-200 my-8"></div>
-
-        <div className="space-y-6">
+        <div className="space-y-2">
           <Button
             onClick={() => navigate("/")}
             className="w-full bg-blue-700 hover:bg-blue-800"
