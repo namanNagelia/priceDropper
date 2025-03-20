@@ -1,0 +1,21 @@
+{
+  "name": "pricedrops",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:fe": "cd priceDrops && npm run dev",
+    "start:be": "cd backend && npm start",
+    "start": "concurrently \"npm run start:fe\" \"npm run start:be\"",
+    "setup": "npm install && cd priceDrops && npm install && cd ../backend && npm install",
+    "db:push": "cd backend && npx drizzle-kit push"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
