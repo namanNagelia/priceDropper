@@ -1,17 +1,46 @@
 // App.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import BackgroundImage from "@/assets/Rectangle.png";
+import { useNavigate } from "react-router-dom";
+import { checkAuth, login } from "@/lib/auth";
+
 function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: any) => {
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const { isAuthenticated } = await checkAuth();
+      if (isAuthenticated) {
+        navigate("/dashboard");
+      }
+    };
+
+    verifyAuth();
+  }, [navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempted with:", { email, password });
+    setLoading(true);
+    setError("");
+
+    const result = await login(email, password);
+
+    if (result.success) {
+      navigate("/dashboard");
+    } else {
+      setError(
+        result.message || "Login failed. Please check your credentials."
+      );
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -34,6 +63,12 @@ function App() {
           </div>
 
           <div className="h-px bg-gray-200 my-8"></div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit}>
             <div className="space-y-6">
@@ -68,15 +103,16 @@ function App() {
               <Button
                 type="submit"
                 className="w-full bg-blue-700 hover:bg-blue-800"
+                disabled={loading}
               >
-                Sign in
+                {loading ? "Signing in..." : "Sign in"}
               </Button>
             </div>
           </form>
 
           <div className="text-center mt-6">
             <p className="text-sm text-gray-600">
-              New to Acme?
+              New to PriceDrops?
               <a
                 href="/sign-up"
                 className="font-semibold text-blue-700 hover:text-blue-800 ml-1"

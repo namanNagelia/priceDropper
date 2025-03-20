@@ -11,8 +11,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middlewarei
-app.use(cors());
+// Configure CORS to allow credentials
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Frontend dev server address
+    credentials: true, // Allow cookies
+  })
+);
+
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 

@@ -1,19 +1,66 @@
 // App.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import BackgroundImage from "@/assets/Rectangle.png";
+import { useNavigate } from "react-router-dom";
+import { checkAuth, register, login } from "@/lib/auth";
+
 function App() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: any) => {
+  useEffect(() => {
+    // Check if user is already logged in
+    const verifyAuth = async () => {
+      const { isAuthenticated } = await checkAuth();
+      if (isAuthenticated) {
+        navigate("/dashboard");
+      }
+    };
+
+    verifyAuth();
+  }, [navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempted with:", { email, password });
+
+    // Validation
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    const registerResult = await register(email, password, name);
+
+    if (registerResult.success) {
+      // Registration successful, now log them in
+      const loginResult = await login(email, password);
+
+      if (loginResult.success) {
+        // Login after registration successful, redirect to dashboard
+        navigate("/dashboard");
+      } else {
+        // Registration successful but login failed
+        navigate("/"); // Go to login page
+      }
+    } else {
+      // Registration failed
+      setError(
+        registerResult.message || "Registration failed. Please try again."
+      );
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -37,11 +84,16 @@ function App() {
 
           <div className="h-px bg-gray-200 my-8"></div>
 
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit}>
             <div className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-
                 <Input
                   type="email"
                   id="email"
@@ -85,8 +137,9 @@ function App() {
               <Button
                 type="submit"
                 className="w-full bg-blue-700 hover:bg-blue-800"
+                disabled={loading}
               >
-                Sign up
+                {loading ? "Creating Account..." : "Sign up"}
               </Button>
             </div>
           </form>
@@ -95,7 +148,7 @@ function App() {
             <p className="text-sm text-gray-600">
               Already have an account?
               <a
-                href="/sign-in"
+                href="/"
                 className="font-semibold text-blue-700 hover:text-blue-800 ml-1"
               >
                 Sign in
