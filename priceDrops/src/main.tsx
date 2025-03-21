@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./index.css";
 import App from "./App.tsx";
-import Create from "./Create.tsx";
-import Dashboard from "./Dashboard.tsx";
+import Create from "./pages/Create.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
 import NotFound from "./NotFound.tsx";
 
 createRoot(document.getElementById("root")!).render(

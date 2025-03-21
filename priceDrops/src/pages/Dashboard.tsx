@@ -9,14 +9,12 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is authenticated
     const verifyAuth = async () => {
       const { isAuthenticated, user } = await checkAuth();
 
       if (isAuthenticated && user) {
         setUser(user);
       } else {
-        // Not authenticated, redirect to login
         navigate("/");
       }
 
@@ -25,7 +23,9 @@ export default function Dashboard() {
 
     verifyAuth();
   }, [navigate]);
-
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
   const handleLogout = async () => {
     const result = await logout();
     if (result.success) {

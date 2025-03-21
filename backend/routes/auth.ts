@@ -111,10 +111,16 @@ export const authenticateToken = (req: any, res: any, next: any) => {
 };
 
 // 🔹 Protected Route Example
-router.get("/protected", authenticateToken, (req: any, res: any) => {
+router.get("/protected", authenticateToken, async (req: any, res: any) => {
+  const userDetails = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.email, req.user.email));
   res.json({
     message: "You have access to this protected route!",
-    user: req.user,
+    user: userDetails[0],
+    userDetails: userDetails,
+    token: req.cookies.token,
   });
 });
 
