@@ -9,7 +9,7 @@ import authRoutes from "./routes/auth";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 // Configure CORS to allow credentials
 app.use(

@@ -9,7 +9,8 @@
     "start:be": "cd backend && npm run devStart",
     "start": "concurrently \"npm run start:fe\" \"npm run start:be\"",
     "setup": "npm install && cd priceDrops && npm install && cd ../backend && npm install",
-    "db:push": "cd backend && npx drizzle-kit push"
+    "db:push": "cd backend && npx drizzle-kit push",
+    "db:pull": "cd backend && npx drizzle-kit pull"
   },
   "keywords": [],
   "author": "",
